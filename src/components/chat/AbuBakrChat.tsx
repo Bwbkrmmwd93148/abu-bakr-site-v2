@@ -276,7 +276,15 @@ export default function AbuBakrChat() {
 
               {/* Voice-mode toggle */}
               <button
-                onClick={() => setVoiceMode(v => !v)}
+                onClick={async () => {
+                  setVoiceMode(v => !v);
+                  try {
+                    const a = new Audio();
+                    a.volume = 0;
+                    await a.play();
+                    a.pause();
+                  } catch {}
+                }}
                 className={`p-1.5 rounded-lg transition-colors ${voiceMode ? 'bg-primary/30 text-primary' : 'text-muted-foreground hover:text-white'}`}
                 title={voiceMode ? 'إيقاف الرد الصوتي' : 'تفعيل الرد الصوتي'}
               >
