@@ -17,11 +17,12 @@ export default async function handler(req:any,res:any){
       model:"canopylabs/orpheus-arabic-saudi",
       voice:"abdullah",
       input:text,
+      response_format:"wav",
     });
 
     const buffer = Buffer.from(await speech.arrayBuffer());
 
-    res.setHeader("Content-Type","audio/mpeg");
+    res.setHeader("Content-Type","audio/wav");
     return res.status(200).send(buffer);
 
   }catch(e:any){
