@@ -81,10 +81,12 @@ async function speakText(text: string): Promise<void> {
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
   const audio = new Audio(url);
+  audio.preload = 'auto';
+  audio.volume = 1;
   await new Promise<void>((resolve) => {
     audio.onended = () => { URL.revokeObjectURL(url); resolve(); };
     audio.onerror = () => { URL.revokeObjectURL(url); resolve(); };
-    audio.play().catch(resolve);
+    audio.play().then(() => {}).catch((e) => { console.error('Audio play error', e); resolve(); });
   });
 }
 
