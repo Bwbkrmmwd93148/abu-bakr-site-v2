@@ -5,42 +5,35 @@ const client = new OpenAI({
   baseURL: "https://api.groq.com/openai/v1",
 });
 
-export default async function handler(req: any, res: any) {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed",
-    });
+export default async function handler(req:any,res:any){
+  if(req.method!=="POST"){
+    return res.status(405).json({error:"Method not allowed"});
   }
 
-  try {
-    const { audio, mimeType } = req.body;
+  try{
+    const {audio,mimeType}=req.body;
 
-    const buffer = Buffer.from(audio, "base64");
-
-    const file = new File(
-      [buffer],
-      `audio.${mimeType?.includes("mp4") ? "mp4" : "webm"}`,
-      {
-        type: mimeType || "audio/webm",
-      }
+    const file=new File(
+      [Buffer.from(audio,"base64")],
+      "voice.webm",
+      {type:mimeType || "audio/webm"}
     );
 
-    const result = await client.audio.transcriptions.create({
+    const result=await client.audio.transcriptions.create({
       file,
-      model: "whisper-large-v3-turbo",
-      language: "ar",
-      prompt: "المتحدث يتكلم العربية المصرية. اكتب الكلام العربي بدقة.",
+      model:"whisper-large-v3",
+      language:"ar",
+      temperature:0,
+      response_format:"json",
     });
 
     return res.status(200).json({
-      text: result.text,
+      text:result.text
     });
 
-  } catch (err: any) {
-    console.error(err);
-
+  }catch(e:any){
     return res.status(500).json({
-      error: err.message || "Transcription error",
+      error:e.message
     });
   }
 }
