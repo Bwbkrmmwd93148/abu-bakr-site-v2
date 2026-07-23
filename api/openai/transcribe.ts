@@ -1,7 +1,8 @@
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
 export default async function handler(req: any, res: any) {
@@ -11,7 +12,32 @@ export default async function handler(req: any, res: any) {
     });
   }
 
-  return res.status(200).json({
-    text: "ميزة تحويل الصوت إلى نص سيتم تفعيلها لاحقاً.",
-  });
+  try {
+    const { audio, mimeType } = req.body;
+
+    const buffer = Buffer.from(audio, "base64");
+
+    const file = new File(
+      [buffer],
+      "audio.webm",
+      { type: mimeType || "audio/webm" }
+    );
+
+    const result = await client.audio.transcriptions.create({
+      file,
+      model: "whisper-large-v3-turbo",
+      language: "ar",
+    });
+
+    return res.status(200).json({
+      text: result.text,
+    });
+
+  } catch (err: any) {
+    console.error(err);
+
+    return res.status(500).json({
+      error: err.message || "Transcription error",
+    });
+  }
 }

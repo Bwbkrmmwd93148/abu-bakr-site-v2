@@ -1,7 +1,8 @@
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
 export default async function handler(req: any, res: any) {
@@ -11,7 +12,26 @@ export default async function handler(req: any, res: any) {
     });
   }
 
-  return res.status(501).json({
-    error: "TTS غير مفعل حالياً",
-  });
+  try {
+    const { text } = req.body;
+
+    const speech = await client.audio.speech.create({
+      model: "canopylabs/orpheus-arabic-saudi",
+      voice: "autumn",
+      input: text,
+      response_format: "wav",
+    });
+
+    const buffer = Buffer.from(await speech.arrayBuffer());
+
+    res.setHeader("Content-Type", "audio/wav");
+    res.send(buffer);
+
+  } catch (err: any) {
+    console.error(err);
+
+    res.status(500).json({
+      error: err.message || "TTS error",
+    });
+  }
 }
