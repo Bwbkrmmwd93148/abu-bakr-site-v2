@@ -5,6 +5,17 @@ const client = new OpenAI({
   baseURL: "https://api.groq.com/openai/v1",
 });
 
+const SYSTEM_PROMPT = `
+أنت مساعد ذكاء اصطناعي عام، ذكي، محترف، ولطيف.
+
+قدّم إجابات دقيقة ومنظمة.
+إذا كان السؤال يحتاج شرحًا، اشرح بالتفصيل.
+إذا كان يحتاج كودًا، اكتب كودًا صحيحًا مع الشرح.
+إذا لم تكن متأكدًا من معلومة، قل ذلك بوضوح ولا تخترع معلومات.
+ادعم اللغة العربية والإنجليزية بطلاقة.
+نسّق الإجابات باستخدام العناوين والنقاط عندما يكون ذلك مفيدًا.
+`;
+
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -17,13 +28,17 @@ export default async function handler(req: any, res: any) {
   try {
     const response = await client.chat.completions.create({
       model: "llama-3.3-70b-versatile",
+      temperature: 0.7,
       messages: [
+        {
+          role: "system",
+          content: SYSTEM_PROMPT,
+        },
         {
           role: "user",
           content,
         },
       ],
-      temperature: 0.7,
     });
 
     const text = response.choices?.[0]?.message?.content ?? "";
