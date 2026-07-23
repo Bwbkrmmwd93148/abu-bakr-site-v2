@@ -1,0 +1,18 @@
+{
+  "transformerOils": [
+    {
+      "title": "زيوت المحولات الكهربائية: التعريف والأهمية",
+      "file": "transformer-oils/articles/transformer-oil-basics.md"
+    },
+    {
+      "title": "اختبارات وصيانة زيوت المحولات الكهربائية",
+      "file": "transformer-oils/articles/transformer-oil-testing-maintenance.md"
+    }
+  ],
+  "aircraft": [
+    {
+      "title": "أساسيات الطائرات والطائرات الحربية",
+      "file": "aircraft/articles/aircraft-basics.md"
+    }
+  ]
+}

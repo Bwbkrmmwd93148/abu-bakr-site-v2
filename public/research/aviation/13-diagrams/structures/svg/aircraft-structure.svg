@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300">
+
+<text x="250" y="40" font-size="30">
+Aircraft Structure
+</text>
+
+<ellipse cx="400" cy="160"
+rx="250" ry="60"
+fill="none"
+stroke="black"
+stroke-width="4"/>
+
+<line x1="200" y1="160"
+x2="600" y2="160"
+stroke="black"
+stroke-width="3"/>
+
+<text x="350" y="170">
+Fuselage
+</text>
+
+</svg>
