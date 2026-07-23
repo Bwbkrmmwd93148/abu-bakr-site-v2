@@ -15,7 +15,7 @@ export default async function handler(req:any,res:any){
 
     const speech = await client.audio.speech.create({
       model:"canopylabs/orpheus-arabic-saudi",
-      voice:"autumn",
+      voice:"abdullah",
       input:text,
     });
 
