@@ -100,7 +100,7 @@ export default function AbuBakrChat() {
   const [convId, setConvId] = useState<number | null>(null);
 
   // Voice state
-  const [voiceMode, setVoiceMode] = useState(false);   // auto-play AI responses
+  const [voiceMode, setVoiceMode] = useState(() => localStorage.getItem('abu_voice_mode') === 'on');   // auto-play AI responses
   const [recording, setRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -279,7 +279,7 @@ export default function AbuBakrChat() {
               {/* Voice-mode toggle */}
               <button
                 onClick={async () => {
-                  setVoiceMode(v => !v);
+                  setVoiceMode(v => { const n = !v; localStorage.setItem('abu_voice_mode', n ? 'on' : 'off'); return n; });
                   try {
                     const a = new Audio();
                     a.volume = 0;
