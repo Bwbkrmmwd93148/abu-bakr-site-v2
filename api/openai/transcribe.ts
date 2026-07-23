@@ -19,14 +19,17 @@ export default async function handler(req: any, res: any) {
 
     const file = new File(
       [buffer],
-      "audio.webm",
-      { type: mimeType || "audio/webm" }
+      `audio.${mimeType?.includes("mp4") ? "mp4" : "webm"}`,
+      {
+        type: mimeType || "audio/webm",
+      }
     );
 
     const result = await client.audio.transcriptions.create({
       file,
       model: "whisper-large-v3-turbo",
       language: "ar",
+      prompt: "المتحدث يتكلم العربية المصرية. اكتب الكلام العربي بدقة.",
     });
 
     return res.status(200).json({
