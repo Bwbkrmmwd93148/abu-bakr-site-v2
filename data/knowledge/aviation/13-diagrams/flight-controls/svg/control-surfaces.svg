@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="300">
+
+<text x="220" y="40" font-size="30">
+Aircraft Control Surfaces
+</text>
+
+<rect x="100" y="120" width="500" height="40"
+fill="none" stroke="black"/>
+
+<text x="150" y="110">
+Wing
+</text>
+
+<text x="250" y="220">
+Aileron
+</text>
+
+<text x="450" y="220">
+Flap
+</text>
+
+</svg>

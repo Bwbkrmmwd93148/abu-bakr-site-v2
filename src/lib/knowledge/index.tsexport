@@ -1,0 +1,7 @@
+  title: string;
+  category: string;
+  path: string;
+  keywords: string[];
+}
+
+export const knowledgeIndex: KnowledgeDocument[] = [];

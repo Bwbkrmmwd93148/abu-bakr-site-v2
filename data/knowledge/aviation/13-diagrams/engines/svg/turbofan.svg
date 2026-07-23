@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="300">
+
+<text x="300" y="40" font-size="30">
+Turbofan Engine Layout
+</text>
+
+<circle cx="120" cy="150" r="70" fill="none" stroke="black" stroke-width="3"/>
+<text x="70" y="155">Fan</text>
+
+<rect x="220" y="100" width="120" height="100"
+fill="none" stroke="black"/>
+<text x="235" y="155">Compressor</text>
+
+<rect x="390" y="100" width="120" height="100"
+fill="none" stroke="black"/>
+<text x="410" y="155">Burner</text>
+
+<rect x="560" y="100" width="120" height="100"
+fill="none" stroke="black"/>
+<text x="590" y="155">Turbine</text>
+
+<line x1="680" y1="150" x2="820" y2="150"
+stroke="black" stroke-width="5"/>
+
+<text x="720" y="130">Nozzle</text>
+
+</svg>

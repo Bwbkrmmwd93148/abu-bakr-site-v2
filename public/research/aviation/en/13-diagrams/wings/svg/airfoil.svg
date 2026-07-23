@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400">
+
+<text x="250" y="40" font-size="30">
+Airfoil Profile
+</text>
+
+<path d="
+M100 200
+C250 80 550 80 700 200
+C500 260 250 260 100 200"
+fill="none"
+stroke="black"
+stroke-width="4"/>
+
+<text x="120" y="180">
+Leading Edge
+</text>
+
+<text x="580" y="220">
+Trailing Edge
+</text>
+
+</svg>
