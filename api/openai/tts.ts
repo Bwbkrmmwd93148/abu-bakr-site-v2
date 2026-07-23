@@ -5,33 +5,29 @@ const client = new OpenAI({
   baseURL: "https://api.groq.com/openai/v1",
 });
 
-export default async function handler(req: any, res: any) {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed",
-    });
+export default async function handler(req:any,res:any){
+  if(req.method!=="POST"){
+    return res.status(405).json({error:"Method not allowed"});
   }
 
-  try {
-    const { text } = req.body;
+  try{
+    const {text}=req.body;
 
     const speech = await client.audio.speech.create({
-      model: "canopylabs/orpheus-arabic-saudi",
-      voice: "autumn",
-      input: text,
-      response_format: "wav",
+      model:"canopylabs/orpheus-arabic-saudi",
+      voice:"autumn",
+      input:text,
     });
 
     const buffer = Buffer.from(await speech.arrayBuffer());
 
-    res.setHeader("Content-Type", "audio/wav");
-    res.send(buffer);
+    res.setHeader("Content-Type","audio/mpeg");
+    return res.status(200).send(buffer);
 
-  } catch (err: any) {
-    console.error(err);
-
-    res.status(500).json({
-      error: err.message || "TTS error",
+  }catch(e:any){
+    console.error(e);
+    return res.status(500).json({
+      error:e.message
     });
   }
 }
