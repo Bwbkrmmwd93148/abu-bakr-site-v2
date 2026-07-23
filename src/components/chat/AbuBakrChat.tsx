@@ -100,10 +100,14 @@ export default function AbuBakrChat() {
   const [convId, setConvId] = useState<number | null>(null);
 
   // Voice state
-  const [voiceMode, setVoiceMode] = useState(() => localStorage.getItem('abu_voice_mode') === 'on');   // auto-play AI responses
+  const [voiceMode, setVoiceMode] = useState(false);   // auto-play AI responses
   const [recording, setRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
   const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    setVoiceMode(localStorage.getItem('abu_voice_mode') === 'on');
+  }, []);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
