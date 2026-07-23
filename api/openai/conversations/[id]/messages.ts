@@ -6,7 +6,9 @@ const client = new OpenAI({
 
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({
+      error: "Method not allowed",
+    });
   }
 
   const { content } = req.body;
@@ -27,8 +29,11 @@ export default async function handler(req: any, res: any) {
     res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
     res.end();
   } catch (err: any) {
-    res.status(500).json({
-      error: err.message,
+    console.error("OPENAI ERROR:", err);
+
+    return res.status(500).json({
+      error: err?.message || "Unknown error",
+      details: String(err),
     });
   }
 }
