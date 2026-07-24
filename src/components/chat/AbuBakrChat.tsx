@@ -130,6 +130,7 @@ export default function AbuBakrChat() {
   const [recording, setRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     setVoiceMode(localStorage.getItem('abu_voice_mode') === 'on');
