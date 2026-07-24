@@ -108,7 +108,8 @@ async function speakPart(
       resolve();
     };
 
-    audio.play().catch(() => {
+    audio.play().catch((e) => {
+      console.error("Audio play error", e);
       resolve();
     });
   });
