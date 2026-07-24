@@ -71,9 +71,10 @@ async function transcribeAudio(blob: Blob): Promise<string> {
   return data.text?.trim() ?? '';
 }
 
-let sharedAudio: HTMLAudioElement | null = null;
-
-async function speakPart(text: string): Promise<void> {
+async function speakPart(
+  text: string,
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>
+): Promise<void> {
   const res = await fetch(`${BASE}/api/openai/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -85,11 +86,11 @@ async function speakPart(text: string): Promise<void> {
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
 
-  if (!sharedAudio) {
-    sharedAudio = new Audio();
+  if (!audioRef.current) {
+    audioRef.current = new Audio();
   }
 
-  const audio = sharedAudio;
+  const audio = audioRef.current;
 
   audio.src = url;
   audio.preload = 'auto';
@@ -109,22 +110,33 @@ async function speakPart(text: string): Promise<void> {
       resolve();
     };
 
-    audio.oncanplaythrough = () => {
+    let started = false;
+
+    const playAudio = () => {
+      if (started) return;
+      started = true;
+
       audio.play().catch((e) => {
         console.error("TTS play error", e);
         resolve();
       });
     };
+
+    audio.oncanplaythrough = playAudio;
+    audio.oncanplay = playAudio;
   });
 }
 
-async function speakText(text: string): Promise<void> {
+async function speakText(
+  text: string,
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>
+): Promise<void> {
   const parts = text.match(/.{1,500}(\s|$)/g) || [text];
 
   for (const part of parts) {
     const clean = part.trim();
     if (clean) {
-      await speakPart(clean);
+      await speakPart(clean, audioRef);
     }
   }
 }
@@ -199,7 +211,7 @@ export default function AbuBakrChat() {
       // Auto-play TTS if voice mode is on
       if (voiceMode && full) {
         setPlaying(true);
-        await speakText(full);
+        await speakText(full, audioRef);
         setPlaying(false);
       }
     } catch {
