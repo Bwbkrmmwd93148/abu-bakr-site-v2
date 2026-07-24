@@ -71,23 +71,44 @@ async function transcribeAudio(blob: Blob): Promise<string> {
   return data.text?.trim() ?? '';
 }
 
-async function speakText(text: string): Promise<void> {
+async function speakPart(text: string): Promise<void> {
   const res = await fetch(`${BASE}/api/openai/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text }),
   });
+
   if (!res.ok) return;
+
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
   const audio = new Audio(url);
+
   audio.preload = 'auto';
   audio.volume = 1;
+
   await new Promise<void>((resolve) => {
-    audio.onended = () => { URL.revokeObjectURL(url); resolve(); };
-    audio.onerror = () => { URL.revokeObjectURL(url); resolve(); };
-    audio.play().then(() => {}).catch((e) => { console.error('Audio play error', e); resolve(); });
+    audio.onended = () => {
+      URL.revokeObjectURL(url);
+      resolve();
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve();
+    };
+    audio.play().catch(() => resolve());
   });
+}
+
+async function speakText(text: string): Promise<void> {
+  const parts = text.match(/.{1,500}(\s|$)/g) || [text];
+
+  for (const part of parts) {
+    const clean = part.trim();
+    if (clean) {
+      await speakPart(clean);
+    }
+  }
 }
 
 /* ── Component ───────────────────────────────────────────────── */
