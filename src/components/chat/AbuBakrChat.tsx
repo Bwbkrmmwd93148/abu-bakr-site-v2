@@ -71,6 +71,8 @@ async function transcribeAudio(blob: Blob): Promise<string> {
   return data.text?.trim() ?? '';
 }
 
+let sharedAudio: HTMLAudioElement | null = null;
+
 async function speakPart(text: string): Promise<void> {
   const res = await fetch(`${BASE}/api/openai/tts`, {
     method: 'POST',
@@ -82,8 +84,14 @@ async function speakPart(text: string): Promise<void> {
 
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
-  const audio = new Audio(url);
 
+  if (!sharedAudio) {
+    sharedAudio = new Audio();
+  }
+
+  const audio = sharedAudio;
+
+  audio.src = url;
   audio.preload = 'auto';
   audio.volume = 1;
 
@@ -98,10 +106,12 @@ async function speakPart(text: string): Promise<void> {
       resolve();
     };
 
-    audio.play().catch((e) => {
-      console.error("TTS play error", e);
-      resolve();
-    });
+    audio.onloadeddata = () => {
+      audio.play().catch((e) => {
+        console.error("TTS play error", e);
+        resolve();
+      });
+    };
   });
 }
 
