@@ -92,38 +92,25 @@ async function speakPart(
 
   const audio = audioRef.current;
 
+  audio.pause();
+  audio.currentTime = 0;
   audio.src = url;
-  audio.preload = 'auto';
   audio.volume = 1;
 
   await new Promise<void>((resolve) => {
     audio.onended = () => {
       URL.revokeObjectURL(url);
-      audio.removeAttribute("src");
-      audio.load();
       resolve();
     };
 
-    audio.onerror = (e) => {
-      console.error("TTS audio error", e);
+    audio.onerror = () => {
       URL.revokeObjectURL(url);
       resolve();
     };
 
-    let started = false;
-
-    const playAudio = () => {
-      if (started) return;
-      started = true;
-
-      audio.play().catch((e) => {
-        console.error("TTS play error", e);
-        resolve();
-      });
-    };
-
-    audio.oncanplaythrough = playAudio;
-    audio.oncanplay = playAudio;
+    audio.play().catch(() => {
+      resolve();
+    });
   });
 }
 
@@ -131,13 +118,9 @@ async function speakText(
   text: string,
   audioRef: React.MutableRefObject<HTMLAudioElement | null>
 ): Promise<void> {
-  const parts = text.match(/.{1,500}(\s|$)/g) || [text];
-
-  for (const part of parts) {
-    const clean = part.trim();
-    if (clean) {
-      await speakPart(clean, audioRef);
-    }
+  const clean = text.trim();
+  if (clean) {
+    await speakPart(clean, audioRef);
   }
 }
 
