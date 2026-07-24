@@ -92,11 +92,16 @@ async function speakPart(text: string): Promise<void> {
       URL.revokeObjectURL(url);
       resolve();
     };
-    audio.onerror = () => {
+    audio.onerror = (e) => {
+      console.error("TTS audio error", e);
       URL.revokeObjectURL(url);
       resolve();
     };
-    audio.play().catch(() => resolve());
+
+    audio.play().catch((e) => {
+      console.error("TTS play error", e);
+      resolve();
+    });
   });
 }
 
