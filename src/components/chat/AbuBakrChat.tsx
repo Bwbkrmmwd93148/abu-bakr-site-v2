@@ -136,6 +136,7 @@ export default function AbuBakrChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const FREE_QUESTIONS = 3;
   const [convId, setConvId] = useState<number | null>(null);
 
   // Voice state
@@ -171,6 +172,16 @@ export default function AbuBakrChat() {
   /* ── Core send ─────────────────────────────────────────────── */
   const sendText = useCallback(async (text: string) => {
     if (!text.trim() || loading) return;
+
+    const usedQuestions = Number(localStorage.getItem("abu_free_questions") || "0");
+    if (usedQuestions >= FREE_QUESTIONS) {
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: "انتهت الأسئلة المجانية الثلاثة. يرجى الاشتراك لمدة شهر لمتابعة المحادثة."
+      }]);
+      return;
+    }
+    localStorage.setItem("abu_free_questions", String(usedQuestions + 1));
     setLoading(true);
     setMessages(prev => [...prev, { role: 'user', content: text }]);
 
