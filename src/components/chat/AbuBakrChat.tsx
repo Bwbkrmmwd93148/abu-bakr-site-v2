@@ -98,15 +98,18 @@ async function speakPart(text: string): Promise<void> {
   await new Promise<void>((resolve) => {
     audio.onended = () => {
       URL.revokeObjectURL(url);
+      audio.removeAttribute("src");
+      audio.load();
       resolve();
     };
+
     audio.onerror = (e) => {
       console.error("TTS audio error", e);
       URL.revokeObjectURL(url);
       resolve();
     };
 
-    audio.onloadeddata = () => {
+    audio.oncanplaythrough = () => {
       audio.play().catch((e) => {
         console.error("TTS play error", e);
         resolve();
