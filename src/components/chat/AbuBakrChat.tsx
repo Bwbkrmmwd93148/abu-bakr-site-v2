@@ -118,9 +118,13 @@ async function speakText(
   text: string,
   audioRef: React.MutableRefObject<HTMLAudioElement | null>
 ): Promise<void> {
-  const clean = text.trim();
-  if (clean) {
-    await speakPart(clean, audioRef);
+  const parts = text.match(/[^.!؟\n]+[.!؟]?/g) || [text];
+
+  for (const part of parts) {
+    const clean = part.trim();
+    if (clean) {
+      await speakPart(clean, audioRef);
+    }
   }
 }
 
